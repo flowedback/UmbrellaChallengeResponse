@@ -61,15 +61,16 @@ public class TestClient {
 
 			// Get the response from the remote endpoint
 			for (Header header : response.getAllHeaders()) {
-				System.out.println(header.getName() + ": " + header.getValue());
 			}
 			String resp = IOUtils.toString(response.getEntity().getContent());
 			System.out.println(resp);
 			String rand = response.getFirstHeader("EAARAND").getValue();
 			String clientresult = response.getFirstHeader("EAAResult").getValue();
-
+			System.out.println("Clientresult: " + clientresult);
+			
 			// calculate result
 			String result = cr.calculate(address.getEaakey(), challenge, rand);
+			System.out.println("Result: " + result);
 
 			// if the results are the same
 			if (result.equals(clientresult)) {
@@ -78,6 +79,7 @@ public class TestClient {
 
 				// create the attributes
 				formparams = new ArrayList<NameValuePair>();
+				System.out.println("Result: " + result);
 				formparams.add(new BasicNameValuePair("EAAResult", result));
 				for (int i = 0; i < pd.length; i++) {
 					Method readMethod = pd[i].getReadMethod();
@@ -88,12 +90,13 @@ public class TestClient {
 					}
 				}
 
+				post = new HttpPost(URL);
+				
 				// and send them
 				post.setEntity(new UrlEncodedFormEntity(formparams, "UTF-8"));
 
 				// Check code
 				response = httpclient.execute(post);
-				resp = IOUtils.toString(response.getEntity().getContent());
 			}
 
 		} catch (Exception e) {

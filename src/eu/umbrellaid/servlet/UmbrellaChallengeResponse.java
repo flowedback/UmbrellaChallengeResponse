@@ -93,9 +93,8 @@ public final class UmbrellaChallengeResponse extends HttpServlet {
 			session.setAttribute(UmbrellaChallengeResponse.EAA_RESULT, result);
 
 		} else {
-			if (req.getAttribute(UmbrellaChallengeResponse.EAA_RESULT) != null
-					&& req.getAttribute(UmbrellaChallengeResponse.EAA_RESULT).equals(session.getAttribute(UmbrellaChallengeResponse.EAA_RESULT))) {
-
+			if (req.getParameter(UmbrellaChallengeResponse.EAA_RESULT) != null
+					&& req.getParameter(UmbrellaChallengeResponse.EAA_RESULT).equals(session.getAttribute(UmbrellaChallengeResponse.EAA_RESULT))) {
 				String email = req.getParameter("email");
 				String affiliation = req.getParameter("affiliation");
 				String firstname = req.getParameter("firstName");
@@ -110,12 +109,22 @@ public final class UmbrellaChallengeResponse extends HttpServlet {
 				address.setEmail(email);
 				address.setAffiliation(affiliation);
 				address.setFirstName(firstname);
-				address.setGender(Gender.valueOf(gender));
+				if (gender != null && !gender.equals("")) {
+					try {
+						address.setGender(Gender.valueOf(gender));
+					} catch (Exception e) {
+					}
+				}
 				address.setLastName(lastname);
 				address.setMiddleInitial(middleinitial);
 				address.setNationality(nationality);
 				address.setPhone(phone);
-				address.setTitle(Honorific.valueOf(title));
+				if (title != null && !title.equals("")) {
+					try {
+						address.setTitle(Honorific.valueOf(title));
+					} catch (Exception e) {
+					}
+				}
 
 				attributewrite.write(address);
 
@@ -123,5 +132,4 @@ public final class UmbrellaChallengeResponse extends HttpServlet {
 		}
 
 	}
-
 }
